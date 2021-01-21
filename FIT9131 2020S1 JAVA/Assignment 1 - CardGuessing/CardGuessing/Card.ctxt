@@ -1,0 +1,24 @@
+#BlueJ class context
+comment0.target=Card
+comment0.text=\r\n\ This\ is\ the\ Card\ class.This\ class\ will\ specify\ the\ attributes\ and\ behaviour\ of\ card.\r\n\r\n\ @Xiaohui\ Ding\r\n\ @due\ on\ 2020-05-07\r\n
+comment1.params=
+comment1.target=Card()
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ Card\r\n
+comment2.params=suit\ number
+comment2.target=Card(int,\ int)
+comment3.params=
+comment3.target=java.lang.String\ recSuitNumber()
+comment3.text=\r\n\ display\ suit\ and\ number\r\n\r\n
+comment4.params=
+comment4.target=int\ getCardSuit()
+comment4.text=\r\n\ get\ card\ suit\r\n
+comment5.params=
+comment5.target=int\ getCardNumber()
+comment5.text=\r\n\ get\ card\ number\r\n
+comment6.params=
+comment6.target=void\ getSuit()
+comment6.text=\r\n\ get\ a\ random\ card\ suit\r\n\r\n
+comment7.params=
+comment7.target=void\ getNumber()
+comment7.text=\r\n\ get\ a\ random\ card\ number\r\n\r\n
+numComments=8

@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=Koala
+comment0.text=\r\n\ This\ is\ the\ Koala\ class.\r\n\r\n\ @Xiaohui\ Ding\r\n\ @06-07-2020\r\n
+comment1.params=
+comment1.target=Koala()
+comment1.text=\r\n\ Default\ Constructor\ for\ objects\ of\ class\ Koala\r\n
+comment2.params=health\ ageNumber
+comment2.target=Koala(boolean,\ int)
+comment2.text=\r\n\ Parametered\ Constructor\ for\ objects\ of\ class\ Koala\r\n
+comment3.params=
+comment3.target=int\ getAge()
+comment3.text=\r\n\ Method\ getAge\r\n\r\n\ return\ a\ int\ number\ of\ age\r\n
+comment4.params=
+comment4.target=boolean\ getIsHealthy()
+comment4.text=\r\n\ Method\ getIsHealthy\r\n\r\n\ return\ a\ boolean\ value\ of\ healthy\ or\ not\r\n
+comment5.params=ageNumber
+comment5.target=void\ setAge(int)
+comment5.text=\r\n\ Method\ setAge\r\n\r\n\ set\ the\ Koala's\ age\r\n
+comment6.params=health
+comment6.target=void\ setIsHealthy(boolean)
+comment6.text=\r\n\ Method\ setIsHealthy\r\n\r\n\ set\ the\ condition\ for\ this\ Koala\r\n
+numComments=7
