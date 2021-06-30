@@ -1,0 +1,3 @@
+paper, author, status, time
+AI6, asd@123.com, Accepted, 2021-05-22 13:09:04.598180
+AI7, asd@123.com, Rejected, 2021-05-22 22:24:14.003773

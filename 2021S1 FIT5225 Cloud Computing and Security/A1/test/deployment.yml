@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iweb-deployment
+  labels:
+    app: iweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iweb
+  template:
+    metadata:
+      labels:
+        app: iweb
+    spec:
+      containers:
+      - name: iweb
+        image: dkjrvdfr/a1-server-app:v1
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: "0.5"
+          limits:
+            cpu: "0.5"

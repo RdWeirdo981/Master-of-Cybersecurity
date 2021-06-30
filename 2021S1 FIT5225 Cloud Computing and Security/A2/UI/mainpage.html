@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+		<script src="js/config.js"></script>
+		<style>
+		body {
+		  background-color: #FF7F50;
+		}
+		</style>
+    </head>
+    
+    <style>
+        p {text-align: center;}
+    </style>
+    
+    <script>
+        // redirect if no id_token provided
+	    var authen_part = window.location.hash;
+        var access_token = authen_part.split("access_token=")[1];
+        if (!access_token) {
+            alert("Unauthorized!");
+	        window.location.replace("https://image3detection2for1assignment.auth.us-east-1.amazoncognito.com/signup?client_id=3rntv25lge865d1njcqsutssem&response_type=token&scope=aws.cognito.signin.user.admin+email+openid&redirect_uri=https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/mainpage");
+        }
+	</script>
+    
+    
+    
+    <body>
+    	<center>
+    	<!--display part-->
+    	<h1>You are logged in!</h1>
+    	<button id="logout">Logout</button>
+    	<hr>
+    	
+    	<label for="image">Upload image:</label>
+    	<button id="upload_image">Try it</button>
+    	<br><br>
+    	<label for="query">Query functions:</label>
+    	<button id="query_functions">Try it</button>
+    	
+    	
+    	
+    	<!--script-->
+    	
+    	
+    	
+    	<!--url-->
+        
+        <script>
+        document.getElementById("logout").onclick = function () {
+            var authen_part = window.location.hash;
+            var old_url = "https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/logoutpage"
+            var new_url = old_url + authen_part
+            location.href = new_url;
+            
+        }
+        </script>
+        
+        <script>
+        document.getElementById("upload_image").onclick = function () {
+            var authen_part = window.location.hash;
+            var old_url = "https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/uploadimagepage"
+            var new_url = old_url + authen_part
+            location.href = new_url;
+        }
+        </script>
+        
+        <script>
+        document.getElementById("query_functions").onclick = function () {
+            var authen_part = window.location.hash;
+
+            var old_url = "https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/querypage"
+            var new_url = old_url + authen_part
+            location.href = new_url;
+        }
+        </script>
+        
+        
+        
+        
+    	</center>
+    </body>
+    
+    
+</html>

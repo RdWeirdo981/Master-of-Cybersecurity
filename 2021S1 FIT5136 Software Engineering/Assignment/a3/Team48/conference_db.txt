@@ -1,0 +1,6 @@
+conference_name, conference_title, conference_topics, submit_deadline_year, submit_deadline_month, submit_deadline_day, conference_chair, conference_accepted_paper
+daje, ds,  Cloud Computing, 1878, 2, 22, jb@monash.edu
+ewe, ee,  Communication and Transportation, 1989, 2, 23, jb@monash.edu
+kingjames, we,  Data Analysis, 1889, 2, 12, jb@monash.edu
+Conference Manual, Applications, Cloud Computing, 2021, 10, 01, jb@monash.edu
+User Manual, 2, Cybersecurity, 2022, 01, 31, jb@monash.edu

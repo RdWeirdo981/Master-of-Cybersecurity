@@ -1,0 +1,5 @@
+python iWebLens_client.py inputfolder http://118.138.245.115:80/server 16
+
+docker build -t server_app .
+
+docker run -i -t -p 5000:5000 --name my_server server_app

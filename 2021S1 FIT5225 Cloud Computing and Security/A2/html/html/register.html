@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<!-- Javascript SDK-->
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
+  <script src="js/amazon-cognito-auth.min.js"></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+  <script src="js/amazon-cognito-identity.min.js"></script>  
+  <script src="js/config.js"></script>
+  </head>
+
+	
+  <body>
+	
+    <h1 class="h3 mb-3 font-weight-normal" id="titleheader">Register an Account</h1>	
+	<h2>Account Setting</h2>
+	<p>User Name: <input type="text" class="form-control" id="userNameInput" placeholder="User Name" pattern=".*" required></p>
+	<p>Password:  <input type="password" class="form-control" id="passwordInputRegister" placeholder="Password" pattern=".*" required>
+    <input type="password" class="form-control" id="confirmationpassword" placeholder="Confirm Password" pattern=".*" required></p>
+	<p>Email Address:  <input type="email" class="form-control" id="emailInput" placeholder="Email" pattern=".*" required></p>
+	<h2>Profile Setting</h2>
+	<p>First Name: <input type="text" class="form-control" id="firstNameInput" placeholder="First Name" pattern=".*" required></p>
+	<p>Last Name: <input type="text" class="form-control" id="lastNameInput" placeholder="Last Name" pattern=".*" required></p>
+	<p><button id="mainbutton" class="btn btn-lg btn-primary btn-block" type="button" onclick="registerButton()" >Register</button></p>
+
+	<script>
+
+		var username;
+		var password;
+		var firstName;
+		var lastName;
+		var poolData;
+		var email;
+			
+	  function registerButton() {
+		
+		email =  document.getElementById("emailInput").value;	
+		username = document.getElementById("userNameInput").value;
+		firstName = document.getElementById("firstNameInput").value;
+		lastName = document.getElementById("lastNameInput").value;
+		
+		if (document.getElementById("passwordInputRegister").value != document.getElementById("confirmationpassword").value) {
+			alert("Passwords Do Not Match!")
+			throw "Passwords Do Not Match!"
+		} else {
+			password =  document.getElementById("passwordInputRegister").value;	
+		}
+		
+		poolData = {
+				UserPoolId : _config.cognito.userPoolId, // Your user pool id here
+				ClientId : _config.cognito.clientId // Your client id here
+			};			
+		
+		var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+		
+
+		var attributeList = [];
+		
+		var dataEmail = {
+			Name : 'email', 
+			Value : email, //get from form field
+		};
+		
+		var dataFirstName = {
+			Name : 'given_name', 
+			Value : firstName, //get from form field
+		};
+
+		var dataLastName = {
+			Name : 'family_name', 
+			Value : lastName, //get from form field
+		};
+
+		var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
+		var attributeFirstName = new AmazonCognitoIdentity.CognitoUserAttribute(dataFirstName);
+		var attributeLastName = new AmazonCognitoIdentity.CognitoUserAttribute(dataLastName)
+		
+		
+		attributeList.push(attributeEmail);
+		attributeList.push(attributeFirstName);
+		attributeList.push(attributeLastName);
+
+		userPool.signUp(username, password, attributeList, null, function(err, result){
+			if (err) {
+				alert(err.message || JSON.stringify(err));
+				return;
+			}
+			cognitoUser = result.user;
+			console.log('user name is ' + cognitoUser.getUsername());
+			//change elements of page
+			document.getElementById("titleheader").innerHTML = "Check your email for a verification link";
+			
+		});
+	  }
+
+	</script>
+ 
+ </body>
+  
+</html>
+
+
+
+
+
+
+
+

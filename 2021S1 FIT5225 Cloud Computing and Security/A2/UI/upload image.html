@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+		<script src="js/config.js"></script>
+		<style>
+		body {
+		  background-color: #FF7F50;
+		}
+		</style>
+    </head>
+    
+    <script>
+        // redirect if no id_token provided
+	    var authen_part = window.location.hash;
+        var access_token = authen_part.split("access_token=")[1];
+        if (!access_token) {
+            alert("Unauthorized!");
+	        window.location.replace("https://image3detection2for1assignment.auth.us-east-1.amazoncognito.com/signup?client_id=3rntv25lge865d1njcqsutssem&response_type=token&scope=aws.cognito.signin.user.admin+email+openid&redirect_uri=https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/mainpage");
+        }
+	</script>
+    
+    <body>
+    	<center>
+    		
+    	<!--display part-->
+    	
+    	<h1>Upload Image</h1>
+    	<button id="logout">Logout</button>
+    	<!--<button onclick="goBack()">Go Back</button>-->
+    	<hr>
+    	<br>
+    	<img width="300" height="300" src="https://imagestorage5190.s3.amazonaws.com/5623787707.jpg">
+    	<br>
+    	<br>
+        <input id="file" type="file" onchange="imgChange(this)" accept="image/*" />
+        &nbsp;&nbsp;&nbsp;&nbsp;
+		<button id="upload-button" onclick="uploadButton()">Upload</button>
+		<br>
+		<br>
+		<!--message default hide-->
+		<p id="message" style="display: none;">Waiting for response...</p>
+		<!--out_msg default hide-->
+		<p id="out_msg" style="display: none;"></p>
+		
+		
+		<!--script part-->
+		
+        <script type="text/javascript">
+            function imgChange(obj) {
+                var image = obj.files[0]; 
+                
+                var reader = new FileReader(); 
+                reader.readAsDataURL(image); 
+                reader.onload = function(ev) { 
+                    var dataURL = ev.target.result; 
+                    document.querySelector("img").src = dataURL; 
+                    console.log(dataURL);
+                };
+            }
+		</script>
+		
+		<script type="text/javascript">
+			function dataURItoBlob(dataURI) {
+			    // convert base64/URLEncoded data component to raw binary data held in a string
+			    var byteString;
+			    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+			        byteString = atob(dataURI.split(',')[1]);
+			    else
+			        byteString = unescape(dataURI.split(',')[1]);
+			
+			    // separate out the mime component
+			    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+			
+			    // write the bytes of the string to a typed array
+			    var ia = new Uint8Array(byteString.length);
+			    for (var i = 0; i < byteString.length; i++) {
+			        ia[i] = byteString.charCodeAt(i);
+			    }
+			
+			    return new Blob([ia], {type:mimeString});
+			}
+		</script>
+		
+		<script type="text/javascript">
+			function uploadButton(){
+				
+				// var token = localStorage.getItem('idtoken');
+				
+				let dataURL = document.querySelector("img").src;
+				var imagefile = dataURItoBlob(dataURL);
+				
+				
+				var myHeaders = new Headers();
+				// myHeaders.append("Authorization", token);
+				myHeaders.append("Content-Type", "image/jpeg");
+				var authen_part = window.location.hash;
+	            var access_token = authen_part.split("access_token=")[1].split("&")[0]
+	            myHeaders.append("Authorization", access_token);
+				
+				// hide out_msg
+				document.getElementById('out_msg').style.display = 'none';
+				// show message
+				document.getElementById('message').style.display = 'block';
+				
+				var requestOptions = {
+				  method: 'POST',
+				  headers: myHeaders,
+				  body: imagefile,
+				  redirect: 'follow'
+				};
+				
+				fetch("https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/uploadimagefunction", requestOptions)
+				  .then(response => response.text())
+				  .then(function(result){
+				  	var json_result = JSON.parse(result);
+				  	if (json_result.message == "Unauthorized"){
+					  		document.getElementById('out_msg').innerText = "Unauthorized!"
+					  		document.getElementById('out_msg').style.display = 'block';
+					  	}
+					  	
+				  	var successful_msg = json_result.body.replace(/"/gi, '');
+				  	var detection = json_result.tags.replace(/[\[\]'"]+/g,'');
+				  	if (detection == ""){
+				  		detection = "No object detected."
+				  	}
+				  	
+				  	// show change text in out_msg
+				  	document.getElementById('out_msg').innerText = successful_msg + ' Objects detected: ' + detection;
+				  	// show out_msg
+					document.getElementById('out_msg').style.display = 'block';
+					
+					// hide message
+				  	document.getElementById('message').style.display = 'none';
+				  	alert("Uploaded!");
+				  })
+				  .catch(error => console.log('error', error));
+			}
+				  
+        </script>
+        
+		
+		<!--<script>-->
+  <!--          function goBack() {-->
+  <!--            window.history.back();-->
+  <!--           }-->
+  <!--      </script>-->
+        
+        
+        <script>
+        document.getElementById("logout").onclick = function () {
+            var authen_part = window.location.hash;
+            var old_url = "https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/logoutpage"
+            var new_url = old_url + authen_part
+            location.href = new_url;
+            
+        }
+        </script>
+		
+		
+		</center>
+    </body>
+</html>

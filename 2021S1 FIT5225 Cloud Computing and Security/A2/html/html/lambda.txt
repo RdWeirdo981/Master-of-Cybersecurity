@@ -1,0 +1,20 @@
+import boto3
+import json
+import base64
+import uuid
+
+s3 = boto3.client('s3')
+
+def lambda_handler(event, context):
+    bucket = '5225image-store'
+    
+    image = event["content"]
+    deimage = base64.b64decode(image.split(",")[1])
+
+
+    fileName = str(uuid.uuid4())+".jpg"
+
+
+    s3.put_object(Bucket=bucket, Key=fileName, Body=deimage)
+
+    print('Put Complete')

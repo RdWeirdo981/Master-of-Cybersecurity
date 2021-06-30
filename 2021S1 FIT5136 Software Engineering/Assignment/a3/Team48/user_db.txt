@@ -1,0 +1,8 @@
+first_name, last_name, user_email, user_password, highest_qualification, user_occupation, employer_details, mobile_number, interest_area, admin_permission
+Xiaohui, Ding, xd@monash.edu, 123asdASD, Master, a, a, 1234567890, Cybersecurity, True
+James, Bond, jb@monash.edu, asd123ASD, Bachelor, dev, monash, 1234567890, Cloud Computing, True
+a, x, asd@123.com, asdZSADSJD123, Less than diploma, dskfjh, sakdjh, 1234567880, Cybersecurity, False
+1, 1, 123as@dASD.com, 123asdAS, Diploma, 1, 1, 1234567890, Cybersecurity, False
+zxc, zxc, zxc@asd.com, asd123ASD, Diploma, sd, asd, 1234567890, Cybersecurity, False
+zxc, cvb, q, ASD124@dsfg.com, Diploma, 1, 1, 1234567890, Cloud Computing, False
+rhr, rhr, 1, 1, Master, dev, 1, 1, Cybersecurity, True

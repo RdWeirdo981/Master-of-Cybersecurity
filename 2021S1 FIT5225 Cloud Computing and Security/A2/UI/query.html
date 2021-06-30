@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+		<script src="js/config.js"></script>
+		<style>
+		body {
+		  background-color: #FF7F50;
+		}
+		</style>
+    </head>
+    
+    <script>
+        // redirect if no id_token provided
+	    var authen_part = window.location.hash;
+        var access_token = authen_part.split("access_token=")[1];
+        if (!access_token) {
+            alert("Unauthorized!");
+	        window.location.replace("https://image3detection2for1assignment.auth.us-east-1.amazoncognito.com/signup?client_id=3rntv25lge865d1njcqsutssem&response_type=token&scope=aws.cognito.signin.user.admin+email+openid&redirect_uri=https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/mainpage");
+        }
+	</script>
+    
+    <body>
+    	<center>
+    		
+    	<!--display part-->
+    	
+    	<h1>Query Functions</h1>
+    	<button id="logout">Logout</button>
+    	<!--<button onclick="goBack()">Go Back</button>-->
+    	<!--<button id="reload" onclick="reload()">Reload</button>-->
+    	<hr>
+    	
+    	
+    	<h3>Find images based on the tags</h3>
+    	<button onclick="hide_show_1()" name="find-by-tags" id="find_tags_hide" type="button">Show</button>
+    	<div id="find_by_tags" style="display: none;">
+    	<br>
+    	<input type="text" id="tags">
+		<button id="find-tags" onclick="search_tags()">Search</button>
+		<p>Notice: split multiple tags by ","</p>
+		<p id="searching" style="display: none;">Searching...</p>
+		<p id="links_tags" style="display: none;"></p>
+		</div>
+		<hr>
+		
+		
+		<h3>Find images based on the tags of an image</h3>
+		<button onclick="hide_show_2()" name="find-by-img" id="find_img_hide" type="button">Show</button>
+		<div id="find_by_img" style="display: none;">
+		<br>	
+		<img width="300" height="300" src="https://imagestorage5190.s3.amazonaws.com/5623787707.jpg">
+		<br>
+		<br>
+        <input id="file" type="file" onchange="imgChange(this)" accept="image/*" />
+        &nbsp;&nbsp;&nbsp;&nbsp;
+		<button id="find-by-image" onclick="search_image()">Search</button>
+		<p id="message" style="display: none;">Searching...</p> 
+		<p id="links" style="display: none;"></p>
+		</div>
+		<hr>
+		
+		<h3>Add extra tags to an image:</h3>
+		<button onclick="hide_show_3()" name="addImage" id="add_image_hide" type="button">Show</button>
+		<div id="add_image" style="display: none;">
+		<br>
+		<label for="img-url">Image url:</label>
+		<input type="text" name="img-url" id="add-url">
+		<br>
+		<label for="add-tags">Add tags:</label>
+		<input type="text" name="add-tagsl" id="add-tags">
+		<p>Notice: split multiple tags by ","</p>
+		<br>
+		<button id="upload-add" onclick="add_tags()">Add</button>
+		<p id="add_message" style="display: none;">Adding...</p>
+		<p id="return_msg" style="display: none;"></p>
+		</div>
+		<hr>
+		
+		<h3>Delete an image by url: </h3>
+		<button onclick="hide_show_4()" name="deleteImage" id="delete_image_hide" type="button">Show</button>
+		<div id="delete_image" style="display: none;">
+		<br>
+		<input type="text" value="" id="delete-url">
+		<button id="upload-delete" onclick="delete_url()">Delete</button>
+		<p id="delete_message" style="display: none;">Deleting</p>
+		<p id="return_msg_delete" style="display: none;"></p>
+		</div>
+		<hr>
+		
+		
+		<!--script part-->
+		
+		<!--reload & go back-->
+		
+		<script>
+            function reload() {
+              window.location.reload();
+             }
+        </script>
+		
+		<script>
+            function goBack() {
+              window.history.back();
+             }
+        </script>
+        
+        
+        
+        <!--Find images based on the tags-->
+        <script type="text/javascript">
+			function search_tags(){
+				
+				// var token = localStorage.getItem('idtoken');
+				
+				
+				var tags_str = document.getElementById("tags").value;
+				var tags_arr = tags_str.split(',');
+	
+				let url = new URL('https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/querytag?');
+				let params = new URLSearchParams(url.search.slice(1));
+				for (i = 0; i < tags_arr.length; i++) {
+				  params.append('tags', tags_arr[i]);
+				}
+				var new_url = url + params
+				
+				var myHeaders = new Headers();
+				var authen_part = window.location.hash;
+	            var access_token = authen_part.split("access_token=")[1].split("&")[0]
+	            myHeaders.append("Authorization", access_token);
+
+				
+				var requestOptions = {
+				  method: 'GET',
+				  headers: myHeaders,
+				  redirect: 'follow'
+				};
+				
+				document.getElementById('links_tags').style.display = 'none';
+				document.getElementById('searching').style.display = 'block';
+				
+				fetch(new_url, requestOptions)
+					.then(response => response.text())
+					.then(function(result){
+					  	var json_result = JSON.parse(result);
+					  	if (json_result.message == "Unauthorized"){
+					  		document.getElementById('links_tags').innerText = "Unauthorized!"
+					  		document.getElementById('links_tags').style.display = 'block';
+					  	}
+					  	var urls = json_result.urls
+					  	if (urls == ""){
+					  		document.getElementById('links_tags').innerText = "Not picture contains all these tags.";
+					  		document.getElementById('links_tags').style.display = 'block';
+					  	}
+					  	else{
+					  		var urlArr = urls.map(item => item.trim()).join("\n");
+					  		document.getElementById('links_tags').innerText = "Links: " + urlArr;
+					  		document.getElementById('links_tags').style.display = 'block';
+					  	}
+					  	
+					  	document.getElementById('searching').style.display = 'none';
+					  	
+					  })
+					.catch(error => console.log('error', error));
+			}
+				  
+        </script>
+        
+        
+        
+        
+        
+        
+        
+        <!--Find images based on the tags of an image:-->
+        
+        <script type="text/javascript">
+            function imgChange(obj) {
+                var image = obj.files[0]; 
+                
+                var reader = new FileReader(); 
+                reader.readAsDataURL(image); 
+                reader.onload = function(ev) { 
+                    var dataURL = ev.target.result; 
+                    document.querySelector("img").src = dataURL; 
+                    console.log(dataURL);
+                };
+            }
+		</script>
+		
+		<script type="text/javascript">
+			function dataURItoBlob(dataURI) {
+			    // convert base64/URLEncoded data component to raw binary data held in a string
+			    var byteString;
+			    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+			        byteString = atob(dataURI.split(',')[1]);
+			    else
+			        byteString = unescape(dataURI.split(',')[1]);
+			
+			    // separate out the mime component
+			    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+			
+			    // write the bytes of the string to a typed array
+			    var ia = new Uint8Array(byteString.length);
+			    for (var i = 0; i < byteString.length; i++) {
+			        ia[i] = byteString.charCodeAt(i);
+			    }
+			
+			    return new Blob([ia], {type:mimeString});
+			}
+		</script>
+		
+		<script type="text/javascript">
+			function search_image(){
+				
+				// var token = localStorage.getItem('idtoken');
+				
+				let dataURL = document.querySelector("img").src
+				var imagefile = dataURItoBlob(dataURL)
+				
+				
+				var myHeaders = new Headers();
+				// myHeaders.append("Authorization", token);
+				myHeaders.append("Content-Type", "image/jpeg");
+				var authen_part = window.location.hash;
+	            var access_token = authen_part.split("access_token=")[1].split("&")[0]
+	            myHeaders.append("Authorization", access_token);
+				
+				
+				var requestOptions = {
+				  method: 'POST',
+				  headers: myHeaders,
+				  body: imagefile,
+				  redirect: 'follow'
+				};
+				
+				document.getElementById('links').style.display = 'none'; 
+				document.getElementById('message').style.display = 'block';
+				
+				fetch("https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/queryfromimage", requestOptions)
+				  .then(response => response.text())
+				  .then(function(result){
+				  	var json_result = JSON.parse(result);
+				  	if (json_result.message == "Unauthorized"){
+					  		document.getElementById('links').innerText = "Unauthorized!"
+					  		document.getElementById('links').style.display = 'block';
+					  	}
+				  	var url = json_result.body.replace(/[\[\]'"]+/g,'');
+				  	var urlArr = url.split(',').map(item => item.trim()).join("\n");
+					// display urls
+					document.getElementById('links').innerText = "Links: " + urlArr;
+					document.getElementById('message').style.display = 'none';
+					document.getElementById('links').style.display = 'block';
+					alert("Uploaded!");
+				  })
+				  .catch(error => console.log('error', error));
+			}
+				  
+        </script>
+        
+        
+        
+        
+        
+        
+        <!--Add extra tags to an image-->
+        <script type="text/javascript">
+			function add_tags(){
+				
+				// var token = localStorage.getItem('idtoken');
+
+				var url = document.getElementById("add-url").value;
+				var tags_string = document.getElementById("add-tags").value;
+				var tags_arr = tags_string.split(',');
+				var dict = {"url":url, "tags": tags_arr};
+				var raw = JSON.stringify(dict);
+				
+				
+				var myHeaders = new Headers();
+				// myHeaders.append("Authorization", token);
+				myHeaders.append("Content-Type", "application/json");
+				var authen_part = window.location.hash;
+	            var access_token = authen_part.split("access_token=")[1].split("&")[0]
+	            myHeaders.append("Authorization", access_token);
+				
+				
+				var requestOptions = {
+				  method: 'POST',
+				  headers: myHeaders,
+				  body: raw,
+				  redirect: 'follow'
+				};
+				
+				document.getElementById('add_message').style.display = 'block';
+				document.getElementById('return_msg').style.display = 'none';
+				
+				fetch("https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/addextratags", requestOptions)
+					.then(response => response.text())
+					.then(function(result){
+						
+					  	var json_result = JSON.parse(result);
+					  	if (json_result.message == "Unauthorized"){
+					  		document.getElementById('return_msg').innerText = "Unauthorized!"
+					  		document.getElementById('return_msg').style.display = 'block';
+					  	}
+					  	var message = json_result.body
+					  	document.getElementById('return_msg').innerText = message;
+					  	document.getElementById('return_msg').style.display = 'block';
+					  	document.getElementById('add_message').style.display = 'none';
+					  })
+					.catch(error => console.log('error', error));
+			}
+				  
+        </script>
+        
+        
+        
+        
+        
+        <!--Delete an image by url-->
+        <script type="text/javascript">
+			function delete_url(){
+				
+				// var token = localStorage.getItem('idtoken');
+
+				var url = document.getElementById("delete-url").value;
+				var dict = {"url":url};
+				var raw = JSON.stringify(dict);
+				
+				
+				var myHeaders = new Headers();
+				// myHeaders.append("Authorization", token);
+				myHeaders.append("Content-Type", "application/json");
+				var authen_part = window.location.hash;
+	            var access_token = authen_part.split("access_token=")[1].split("&")[0]
+	            myHeaders.append("Authorization", access_token);
+				
+				
+				var requestOptions = {
+				  method: 'POST',
+				  headers: myHeaders,
+				  body: raw,
+				  redirect: 'follow'
+				};
+				
+				document.getElementById('delete_message').style.display = 'block';
+				document.getElementById('return_msg_delete').style.display = 'none';
+				
+				fetch("https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/deleteimage", requestOptions)
+					.then(response => response.text())
+					.then(function(result){
+					  	var json_result = JSON.parse(result);
+					  	if (json_result.message == "Unauthorized"){
+					  		document.getElementById('return_msg_delete').innerText = "Unauthorized!"
+					  		document.getElementById('return_msg_delete').style.display = 'block';
+					  	}
+					  	var message = json_result.body
+					  	document.getElementById('return_msg_delete').innerText = message;
+					  	document.getElementById('delete_message').style.display = 'none';
+				document.getElementById('return_msg_delete').style.display = 'block';
+					  })
+					.catch(error => console.log('error', error));
+			}
+				  
+        </script>
+        
+        
+        
+        
+        
+        
+        <!--Hide or show-->
+        <script>
+		function hide_show_1() {
+		  var x = document.getElementById("find_by_tags");
+		  if (x.style.display === "none") {
+		    x.style.display = "block";
+		    document.querySelector('#find_tags_hide').innerHTML = 'Hide';
+		  } else {
+		    x.style.display = "none";
+		    document.querySelector('#find_tags_hide').innerHTML = 'Show'
+		  }
+		}
+		</script>
+		
+		<script>
+		function hide_show_2() {
+		  var x = document.getElementById("find_by_img");
+		  if (x.style.display === "none") {
+		    x.style.display = "block";
+		    document.querySelector('#find_img_hide').innerHTML = 'Hide';
+		  } else {
+		    x.style.display = "none";
+		    document.querySelector('#find_img_hide').innerHTML = 'Show'
+		  }
+		}
+		</script>
+		
+		<script>
+		function hide_show_3() {
+		  var x = document.getElementById("add_image");
+		  if (x.style.display === "none") {
+		    x.style.display = "block";
+		    document.querySelector('#add_image_hide').innerHTML = 'Hide';
+		  } else {
+		    x.style.display = "none";
+		    document.querySelector('#add_image_hide').innerHTML = 'Show'
+		  }
+		}
+		</script>
+		
+		<script>
+		function hide_show_4() {
+		  var x = document.getElementById("delete_image");
+		  if (x.style.display === "none") {
+		    x.style.display = "block";
+		    document.querySelector('#delete_image_hide').innerHTML = 'Hide';
+		  } else {
+		    x.style.display = "none";
+		    document.querySelector('#delete_image_hide').innerHTML = 'Show'
+		  }
+		}
+		</script>
+		
+		
+		<script>
+        document.getElementById("logout").onclick = function () {
+            var authen_part = window.location.hash;
+            var old_url = "https://yv3pcqir0a.execute-api.us-east-1.amazonaws.com/ImageDetection/logoutpage"
+            var new_url = old_url + authen_part
+            location.href = new_url;
+            
+        }
+        </script>
+		
+		
+		</center>
+    </body>
+</html>

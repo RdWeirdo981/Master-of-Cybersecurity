@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+		<script src="js/config.js"></script>
+    </head>
+	<body>
+		<input type="text" value="" id="tags">
+		<button id="upload-button" onclick="uploadButton()">search</button>
+		<button type="button" onclick="signOut()">Sign out</button> 
+	<p>
+		<pre id="out_pre"></pre>
+	</p>
+		
+		<script type="text/javascript">
+		
+			function uploadButton(){
+				var token = localStorage.getItem('idtoken');
+					
+				let tags = document.getElementById("tags").value;
+				
+				
+				var myHeaders = new Headers();
+				myHeaders.append("Authorization", token);
+				myHeaders.append("Content-Type", "application/json");
+
+				var raw = JSON.stringify({"tags":tags});
+				
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					body: raw,
+					redirect: 'follow'
+				};
+
+				fetch("https://h7ukww0v3c.execute-api.us-east-1.amazonaws.com/restful-api/upload", requestOptions)
+				.then(response => response.text())
+				.then(result => console.log(result))
+				.catch(error => console.log('error', error));
+				
+			}
+        </script>
+		
+		<script type="text/javascript">
+			function signOut(){
+				localStorage.removeItem('idtoken');
+				window.location.href="signout.html"
+			}
+		</script>
+		
+		<script>
+			var json = '{"links":"www.baidu.com"}';			
+			var result = JSON.stringify(JSON.parse(json), null, 4);
+			
+			document.getElementById('out_pre').innerText = result;
+			
+		</script>
+	</body>

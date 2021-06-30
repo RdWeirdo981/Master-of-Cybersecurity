@@ -1,0 +1,4 @@
+filename, paper_title, paper_topics, paper_keywords, author_names, paper_submit_year, paper_submit_month, paper_submit_day, conference_name, paper_status, reviewer1, reviewer2, reviewer3
+Zdd.pdf, AI8, Cloud Computing, Security, asd@123.com, 2021, 5, 5, Cloud Computing, Not Assigned, 123as@dASD.com, jb@monash.edu, asd@123.com
+wet.pdf, AI1, Cloud Computing, Security, asd@123.com, 2021, 5, 5, Cloud Computing, Not Assigned, 123as@dASD.com, jb@monash.edu, asd@123.com
+sas.pdf, AI9, Cloud Computing, Security, asd@123.com, 2021, 5, 5, Cloud Computing, Not Assigned, 123as@dASD.com, jb@monash.edu, asd@123.com

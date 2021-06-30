@@ -1,0 +1,13 @@
+- query-tags-function
+	- send: tags (content type: json)
+	- return: url (content type: json)
+- queryfromimage: 
+	- send: image (content type: img)
+	- return: url (content type: json)
+- deleteimage
+	- send: url (content type: json)
+	- return: message (content type: json)
+- addextratags
+	- send: url (content type: json)
+	- return: successfully/error (content type: json)
+		- tags: ["str1"]

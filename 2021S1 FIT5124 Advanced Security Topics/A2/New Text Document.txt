@@ -1,0 +1,5 @@
+setup phase:
+clients ---- sends data ----> 2 servers
+
+computation phase:
+2 servers ---- training data ----> trained model

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+		<script src="js/config.js"></script>
+    </head>
+	<body>
+		<input type="text" value="" id="tags">
+		<button id="upload-button" onclick="uploadButton()">search</button>
+		<br>
+		<p id="message"></p>
+		
+		<script type="text/javascript">
+		
+			function uploadButton(){
+				
+				document.getElementById('message').innerText = "HI!" + document.getElementById('tags').value;
+				
+			}
+        </script>
+		
+	</body>

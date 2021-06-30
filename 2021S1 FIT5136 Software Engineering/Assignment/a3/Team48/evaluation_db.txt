@@ -1,0 +1,7 @@
+serial_number, paper_title, reviewer_name, evaluator_comment, conference_chair, paper_author
+1, AI6, shawn, nice, jb@monash.edu, asd@123.com
+2, AI7, rice, excellent, jb@monash.edu, zxc
+3, AI6, kim, good, jb@monash.edu, asd@123.com
+4, AI6, axsd, great, jb@monash.edu, asd@123.com
+5, AI6, asfafg, wonderful, jb@monash.edu, asd@123.com
+6, AI5, asfafg, wonderful, jb@monash.edu, ert@asd.com

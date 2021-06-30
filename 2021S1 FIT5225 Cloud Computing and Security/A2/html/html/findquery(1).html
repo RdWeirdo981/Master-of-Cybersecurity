@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Search</title>
+		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+		<script src="js/amazon-cognito-identity.min.js"></script>  
+		<script src="js/config.js"></script>
+
+		<style>
+			#middle{margin: auto; width:350px; height:auto; border:1px; background-color:lightblue;}
+		</style>
+    </head>
+	<body>
+		<div id="middle">
+			<h1 style="text-align: center;" >FIT5225 Gallery Engine</h1>
+			
+			<h5 style="text-align: center;">Current user: <label id="userName"></label> <button type="button" onclick="signOut()">Sign out</button></h5>
+			<h3 style="text-align: center;">Search image here or Go to <button type="button" onclick="redirectUpload()">Upload image</button></h3>
+			<p style="text-align: center;"><input type="text" value="" id="tags">
+			<button id="upload-button" onclick="uploadButton()">search</button></p>		
+			<pre id="out_pre"></pre>			
+		</div>
+		
+	<script type="text/javascript">
+		
+		function uploadButton(){
+			var token = localStorage.getItem('idtoken');
+				
+			let tags = document.getElementById("tags").value;
+			
+			
+			var myHeaders = new Headers();
+			myHeaders.append("Authorization", token);
+			myHeaders.append("Content-Type", "application/json");
+
+			var raw = JSON.stringify({"tags":tags});
+			
+			var requestOptions = {
+				method: 'POST',
+				headers: myHeaders,
+				body: raw,
+				redirect: 'follow'
+			};
+			var json;
+			let reg = /\\/g;
+			fetch("https://558gnk33p4.execute-api.us-east-1.amazonaws.com/develop/findurl", requestOptions)
+			.then(response => response.text())
+			.then(result => document.getElementById('out_pre').innerText = JSON.parse(result))
+			.catch(error => console.log('error', error));
+		    
+			
+			
+			
+			
+		}
+	</script>
+		
+	<script type="text/javascript">
+		var data = { 
+			UserPoolId : _config.cognito.userPoolId,
+        	ClientId : _config.cognito.clientId
+    	};
+    	var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+    	var cognitoUser = userPool.getCurrentUser();
+			document.getElementById("userName").innerHTML = cognitoUser['username']			
+	</script>
+
+	<script type="text/javascript">
+	function redirectUpload(){
+			window.location.href="upload.html";
+		}
+	</script>
+		
+		<script type="text/javascript">
+			function signOut(){
+				localStorage.removeItem('idtoken');
+				window.location.href="signout.html"
+			}
+		</script>
+		
+		
+	</body>
